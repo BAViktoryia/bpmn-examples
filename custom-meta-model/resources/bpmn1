@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions id="definitions"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
+             targetNamespace="http://bpmn.io/schema/bpmn">
+  <process id="vacationPreparation" name="Preparation to a Vacation">
+    <!-- Start Event -->
+    <startEvent id="startEvent" name="Start">
+      <outgoing>flow_startToContactVisaAgency</outgoing>
+    </startEvent>
+    <!-- Contact Visa Agency Task -->
+    <userTask id="contactVisaAgency" name="Contact Visa Agency">
+      <incoming>flow_startToContactVisaAgency</incoming>
+      <outgoing>flow_contactVisaAgencyToBookHotel</outgoing>
+    </userTask>
+    <!-- Book Hotel Task -->
+    <userTask id="bookHotel" name="Book Hotel">
+      <incoming>flow_contactVisaAgencyToBookHotel</incoming>
+      <outgoing>flow_bookHotelToBookFlight</outgoing>
+    </userTask>
+    <!-- Book Flight Task -->
+    <userTask id="bookFlight" name="Book Flight">
+      <incoming>flow_bookHotelToBookFlight</incoming>
+      <outgoing>flow_bookFlightToRentCar</outgoing>
+    </userTask>
+    <!-- Rent Car Task -->
+    <userTask id="rentCar" name="Rent Car">
+      <incoming>flow_bookFlightToRentCar</incoming>
+      <outgoing>flow_rentCarToBookExcursion</outgoing>
+    </userTask>
+    <!-- Book Excursion Task -->
+    <userTask id="bookExcursion" name="Book Excursion">
+      <incoming>flow_rentCarToBookExcursion</incoming>
+      <outgoing>flow_bookExcursionToEnd</outgoing>
+    </userTask>
+    <!-- End Event -->
+    <endEvent id="endEvent" name="End">
+      <incoming>flow_bookExcursionToEnd</incoming>
+    </endEvent>
+    <!-- Sequence Flows -->
+    <sequenceFlow id="flow_startToContactVisaAgency" sourceRef="startEvent" targetRef="contactVisaAgency"/>
+    <sequenceFlow id="flow_contactVisaAgencyToBookHotel" sourceRef="contactVisaAgency" targetRef="bookHotel"/>
+    <sequenceFlow id="flow_bookHotelToBookFlight" sourceRef="bookHotel" targetRef="bookFlight"/>
+    <sequenceFlow id="flow_bookFlightToRentCar" sourceRef="bookFlight" targetRef="rentCar"/>
+    <sequenceFlow id="flow_rentCarToBookExcursion" sourceRef="rentCar" targetRef="bookExcursion"/>
+    <sequenceFlow id="flow_bookExcursionToEnd" sourceRef="bookExcursion" targetRef="endEvent"/>
+  </process>
+</definitions>
