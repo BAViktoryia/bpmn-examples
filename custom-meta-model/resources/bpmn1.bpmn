@@ -1,49 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions id="definitions"
-             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
-             targetNamespace="http://bpmn.io/schema/bpmn">
-  <process id="vacationPreparation" name="Preparation to a Vacation">
-    <!-- Start Event -->
-    <startEvent id="startEvent" name="Start">
-      <outgoing>flow_startToContactVisaAgency</outgoing>
+<definitions
+  xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:flowable="http://flowable.org/bpmn"
+  targetNamespace="VacationPreparation"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd">
+
+  <process id="vacationPreparation" name="Vacation Preparation">
+  
+    <!-- Start Event: Initiating the vacation preparation process -->
+    <startEvent id="startEvent" name="Start Vacation Preparation">
+      <outgoing>visaApplicationTask</outgoing>
     </startEvent>
-    <!-- Contact Visa Agency Task -->
-    <userTask id="contactVisaAgency" name="Contact Visa Agency">
-      <incoming>flow_startToContactVisaAgency</incoming>
-      <outgoing>flow_contactVisaAgencyToBookHotel</outgoing>
+    
+    <!-- Task: Contact Visa Agency -->
+    <userTask id="visaApplicationTask" name="Contact Visa Agency">
+      <documentation>
+        You and your girlfriend need visas, contact the Visa Agency to initiate the visa application process.
+      </documentation>
+      <outgoing>bookTicketsTask</outgoing>
     </userTask>
-    <!-- Book Hotel Task -->
-    <userTask id="bookHotel" name="Book Hotel">
-      <incoming>flow_contactVisaAgencyToBookHotel</incoming>
-      <outgoing>flow_bookHotelToBookFlight</outgoing>
+    
+    <!-- Task: Book Hotel and Flight Tickets -->
+    <userTask id="bookTicketsTask" name="Book Hotel and Flight Tickets">
+      <documentation>
+        You and your girlfriend will book hotel and flight tickets for your vacation in Spain.
+      </documentation>
+      <outgoing=rentCarTask</outgoing>
     </userTask>
-    <!-- Book Flight Task -->
-    <userTask id="bookFlight" name="Book Flight">
-      <incoming>flow_bookHotelToBookFlight</incoming>
-      <outgoing>flow_bookFlightToRentCar</outgoing>
+    
+    <!-- Task: Rent a Car -->
+    <userTask id="rentCarTask" name="Rent a Car">
+      <documentation>
+        Rent a car for the entire duration of your vacation.
+      </documentation>
+      <outgoing>bookExcursionTask</outgoing>
     </userTask>
-    <!-- Rent Car Task -->
-    <userTask id="rentCar" name="Rent Car">
-      <incoming>flow_bookFlightToRentCar</incoming>
-      <outgoing>flow_rentCarToBookExcursion</outgoing>
+    
+    <!-- Task: Book Excursion with Advance Tickets -->
+    <userTask id="bookExcursionTask" name="Book Excursion with Advance Tickets">
+      <documentation>
+        Your girlfriend is responsible for booking an excursion. It is recommended to buy tickets in advance.
+      </documentation>
+      <outgoing>endEvent</outgoing>
     </userTask>
-    <!-- Book Excursion Task -->
-    <userTask id="bookExcursion" name="Book Excursion">
-      <incoming>flow_rentCarToBookExcursion</incoming>
-      <outgoing>flow_bookExcursionToEnd</outgoing>
-    </userTask>
-    <!-- End Event -->
-    <endEvent id="endEvent" name="End">
-      <incoming>flow_bookExcursionToEnd</incoming>
+    
+    <!-- End Event: Completion of the vacation preparation process -->
+    <endEvent id="endEvent" name="Vacation Preparation Completed">
+      <incoming>bookExcursionTask</incoming>
     </endEvent>
+    
     <!-- Sequence Flows -->
-    <sequenceFlow id="flow_startToContactVisaAgency" sourceRef="startEvent" targetRef="contactVisaAgency"/>
-    <sequenceFlow id="flow_contactVisaAgencyToBookHotel" sourceRef="contactVisaAgency" targetRef="bookHotel"/>
-    <sequenceFlow id="flow_bookHotelToBookFlight" sourceRef="bookHotel" targetRef="bookFlight"/>
-    <sequenceFlow id="flow_bookFlightToRentCar" sourceRef="bookFlight" targetRef="rentCar"/>
-    <sequenceFlow id="flow_rentCarToBookExcursion" sourceRef="rentCar" targetRef="bookExcursion"/>
-    <sequenceFlow id="flow_bookExcursionToEnd" sourceRef="bookExcursion" targetRef="endEvent"/>
+    <sequenceFlow id="flow1" sourceRef="startEvent" targetRef="visaApplicationTask" />
+    <sequenceFlow id="flow2" sourceRef="visaApplicationTask" targetRef="bookTicketsTask" />
+    <sequenceFlow id="flow3" sourceRef="bookTicketsTask" targetRef="rentCarTask" />
+    <sequenceFlow id="flow4" sourceRef="rentCarTask" targetRef="bookExcursionTask" />
+    <sequenceFlow id="flow5" sourceRef="bookExcursionTask" targetRef="endEvent" />
+
   </process>
+
 </definitions>
